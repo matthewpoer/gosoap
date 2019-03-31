@@ -62,11 +62,24 @@ func recursiveEncode(hm interface{}) {
 	switch v.Kind() {
 	case reflect.Map:
 		for _, key := range v.MapKeys() {
-			t := xml.StartElement{
-				Name: xml.Name{
-					Space: "",
-					Local: key.String(),
-				},
+			var t xml.StartElement
+			if key.String() == "ObjectTypes" {
+				t = xml.StartElement{
+					Name: xml.Name{
+						Space: "",
+						Local: key.String(),
+					},
+					Attr: []xml.Attr{
+						{Name: xml.Name{Space: "", Local: "xmlns"}, Value: "http://schemas.cvent.com/api/2006-11"},
+					},
+				}
+			} else {
+				t = xml.StartElement{
+					Name: xml.Name{
+						Space: "",
+						Local: key.String(),
+					},
+				}
 			}
 
 			tokens = append(tokens, t)
